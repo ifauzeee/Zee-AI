@@ -1,0 +1,56 @@
+services:
+  # ━━━ Ollama (AI Engine) ━━━
+  ollama:
+    image: ollama/ollama:latest
+    container_name: zee-ai-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    # Uncomment for NVIDIA GPU support:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  # ━━━ Go Backend API ━━━
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zee-ai-api
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - HOST=0.0.0.0
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - DB_PATH=/data/zee-ai.db
+      - FRONTEND_URL=http://localhost:3000
+    volumes:
+      - api_data:/data
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  # ━━━ Next.js Frontend ━━━
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: zee-ai-web
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8080
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  api_data:
