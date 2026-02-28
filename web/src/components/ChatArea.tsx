@@ -49,7 +49,7 @@ export default function ChatArea() {
     useEffect(() => {
         if (activeConversationId && !isStreaming) {
             loadConversation(activeConversationId);
-        } else if (!activeConversationId) {
+        } else if (!activeConversationId && !isStreaming) {
             setMessages([]);
         }
     }, [activeConversationId, isStreaming]);
@@ -191,8 +191,8 @@ export default function ChatArea() {
     const suggestions = [
         { icon: <Code size={18} className="text-[#00f0ff]" />, text: 'Write a Python script', desc: 'to scrape a website' },
         { icon: <BrainCircuit size={18} className="text-[#8a2be2]" />, text: 'Explain a concept', desc: 'like a 5 year old' },
-        { icon: <BookOpen size={18} className="text-[#10b981]" />, text: 'Summarize this article', desc: 'in bullet points' },
-        { icon: <MessageSquare size={18} className="text-[#f59e0b]" />, text: 'Help me draft', desc: 'a professional email' },
+        { icon: <BookOpen size={18} className="text-success" />, text: 'Summarize this article', desc: 'in bullet points' },
+        { icon: <MessageSquare size={18} className="text-warning" />, text: 'Help me draft', desc: 'a professional email' },
     ];
 
     return (
@@ -224,8 +224,8 @@ export default function ChatArea() {
                                 transition={{ type: 'spring', damping: 20, stiffness: 100 }}
                             >
                                 <div className="relative w-20 h-20 mx-auto mb-8 glow-effect">
-                                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-[#8a2be2] to-[#00f0ff] animate-spin-slow opacity-50 blur-md" />
-                                    <div className="relative w-full h-full rounded-2xl bg-[#0a0a0c] border border-[rgba(255,255,255,0.1)] flex items-center justify-center shadow-2xl backdrop-blur-xl">
+                                    <div className="absolute inset-0 rounded-2xl bg-linear-to-tr from-[#8a2be2] to-[#00f0ff] animate-spin-slow opacity-50 blur-md" />
+                                    <div className="relative w-full h-full rounded-2xl bg-bg-primary border border-[rgba(255,255,255,0.1)] flex items-center justify-center shadow-2xl backdrop-blur-xl">
                                         <Sparkles size={36} className="text-white" />
                                     </div>
                                 </div>
@@ -237,14 +237,14 @@ export default function ChatArea() {
                                 transition={{ delay: 0.1, duration: 0.8, ease: "easeOut" }}
                                 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight text-white"
                             >
-                                Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8a2be2] to-[#00f0ff] animate-pulse">Zee-AI</span>
+                                Welcome to <span className="text-transparent bg-clip-text bg-linear-to-r from-[#8a2be2] to-[#00f0ff] animate-pulse">Zee-AI</span>
                             </motion.h1>
 
                             <motion.p
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.2, duration: 0.8 }}
-                                className="text-lg text-[#a1a1aa] mb-12 max-w-xl mx-auto font-light"
+                                className="text-lg text-text-secondary mb-12 max-w-xl mx-auto font-light"
                             >
                                 Your premium self-hosted AI orchestrator. Completely private, blazingly fast, and elegantly designed.
                             </motion.p>
@@ -258,14 +258,14 @@ export default function ChatArea() {
                                 >
                                     <div className="flex items-center gap-2.5 mb-4">
                                         <div className="p-1.5 rounded-lg bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.05)]">
-                                            <Settings2 size={16} className="text-[#a1a1aa]" />
+                                            <Settings2 size={16} className="text-text-secondary" />
                                         </div>
-                                        <h3 className="text-[15px] font-semibold text-[#f8f8f8] tracking-wide">AI Persona Configuration</h3>
+                                        <h3 className="text-[15px] font-semibold text-text-primary tracking-wide">AI Persona Configuration</h3>
                                     </div>
                                     <div className="space-y-4">
                                         <div className="relative">
                                             <select
-                                                className="w-full bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-sm text-[#f8f8f8] outline-none focus:border-[#8a2be2] focus:ring-1 focus:ring-[#8a2be2] transition-all cursor-pointer premium-select appearance-none"
+                                                className="w-full bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-sm text-text-primary outline-none focus:border-[#8a2be2] focus:ring-1 focus:ring-[#8a2be2] transition-all cursor-pointer premium-select appearance-none"
                                                 onChange={(e) => setSystemPrompt(e.target.value)}
                                                 value={systemPrompt}
                                             >
@@ -277,7 +277,7 @@ export default function ChatArea() {
                                             </select>
                                         </div>
                                         <textarea
-                                            className="w-full bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-sm text-[#a1a1aa] resize-none outline-none focus:border-[#8a2be2] focus:ring-1 focus:ring-[#8a2be2] transition-all placeholder:text-[#52525b] custom-scrollbar"
+                                            className="w-full bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-sm text-text-secondary resize-none outline-none focus:border-[#8a2be2] focus:ring-1 focus:ring-[#8a2be2] transition-all placeholder:text-text-muted custom-scrollbar"
                                             rows={2}
                                             placeholder="Or forge a custom imperative instruction here..."
                                             value={systemPrompt}
@@ -308,10 +308,10 @@ export default function ChatArea() {
                                                     {s.icon}
                                                 </div>
                                                 <div>
-                                                    <div className="text-[15px] font-semibold text-[#f8f8f8] mb-1 group-hover:text-white transition-colors">
+                                                    <div className="text-[15px] font-semibold text-text-primary mb-1 group-hover:text-white transition-colors">
                                                         {s.text}
                                                     </div>
-                                                    <div className="text-[13px] text-[#71717a] font-medium">
+                                                    <div className="text-[13px] text-text-tertiary font-medium">
                                                         {s.desc}
                                                     </div>
                                                 </div>
@@ -324,15 +324,15 @@ export default function ChatArea() {
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.3 }}
-                                    className="glass-card p-8 max-w-md mx-auto text-center border-[#f59e0b]/30"
+                                    className="glass-card p-8 max-w-md mx-auto text-center border-warning/30"
                                 >
-                                    <div className="w-16 h-16 mx-auto bg-[#f59e0b]/10 rounded-full flex items-center justify-center mb-4">
-                                        <Cpu size={28} className="text-[#f59e0b]" />
+                                    <div className="w-16 h-16 mx-auto bg-warning/10 rounded-full flex items-center justify-center mb-4">
+                                        <Cpu size={28} className="text-warning" />
                                     </div>
                                     <h3 className="text-lg font-bold text-white mb-2">
                                         Awaiting Intelligence Provider
                                     </h3>
-                                    <p className="text-sm text-[#a1a1aa] mb-6 leading-relaxed">
+                                    <p className="text-sm text-text-secondary mb-6 leading-relaxed">
                                         Ensure your local Ollama instance is operational and a model is acquired within the framework.
                                     </p>
                                     <div className="bg-black/50 border border-[rgba(255,255,255,0.05)] px-4 py-3 rounded-xl flex items-center justify-between group">
@@ -388,7 +388,7 @@ export default function ChatArea() {
             </AnimatePresence>
 
             {/* Premium Input Area */}
-            <div className="p-4 sm:p-6 w-full relative z-10 before:absolute before:inset-x-0 before:bottom-0 before:h-40 before:bg-gradient-to-t before:from-[#0a0a0c] before:via-[#0a0a0c]/80 before:to-transparent before:-z-10 pointer-events-none">
+            <div className="p-4 sm:p-6 w-full relative z-10 before:absolute before:inset-x-0 before:bottom-0 before:h-40 before:bg-linear-to-t before:from-bg-primary before:via-bg-primary/80 before:to-transparent before:-z-10 pointer-events-none">
                 <div className="max-w-4xl mx-auto pointer-events-auto">
                     <div className="input-premium relative">
                         <div className="flex items-end gap-3 p-3">
@@ -404,14 +404,14 @@ export default function ChatArea() {
                                 }
                                 disabled={!selectedModel}
                                 rows={1}
-                                className="flex-1 bg-transparent border-none outline-none resize-none text-[15px] px-3 py-3 text-white placeholder:text-[#52525b] disabled:opacity-50 font-medium leading-relaxed custom-scrollbar"
+                                className="flex-1 bg-transparent border-none outline-none resize-none text-[15px] px-3 py-3 text-white placeholder:text-text-muted disabled:opacity-50 font-medium leading-relaxed custom-scrollbar"
                                 style={{ minHeight: '52px', maxHeight: '250px' }}
                             />
 
                             {isStreaming ? (
                                 <button
                                     onClick={handleStop}
-                                    className="shrink-0 p-3.5 mb-1 mr-1 rounded-xl bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 hover:bg-[#ef4444]/20 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all"
+                                    className="shrink-0 p-3.5 mb-1 mr-1 rounded-xl bg-error/10 text-error border border-error/20 hover:bg-error/20 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all"
                                 >
                                     <StopCircle size={20} className="animate-pulse" />
                                 </button>
@@ -432,7 +432,7 @@ export default function ChatArea() {
                                     {input.trim() && selectedModel && (
                                         <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                                     )}
-                                    <Send size={20} className={`${input.trim() && selectedModel ? "text-white" : "text-[#71717a]"} relative z-10 ${input.trim() && selectedModel ? "group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" : ""}`} />
+                                    <Send size={20} className={`${input.trim() && selectedModel ? "text-white" : "text-text-tertiary"} relative z-10 ${input.trim() && selectedModel ? "group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" : ""}`} />
                                 </button>
                             )}
                         </div>
@@ -440,7 +440,7 @@ export default function ChatArea() {
 
                     <div className="text-center mt-3 flex justify-center items-center gap-2">
                         <Sparkles size={12} className="text-[#8a2be2]" />
-                        <p className="text-xs font-medium text-[#71717a]">
+                        <p className="text-xs font-medium text-text-tertiary">
                             Zee-AI operates autonomously on your hardware. Absolute privacy guaranteed.
                         </p>
                     </div>
