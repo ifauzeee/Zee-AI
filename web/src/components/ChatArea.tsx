@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Send,
     StopCircle,
     Sparkles,
-    Zap,
     ArrowDown,
     Cpu,
     MessageSquare,
@@ -23,6 +22,7 @@ import {
     type ChatStreamChunk,
 } from '@/lib/api';
 import MessageBubble from './MessageBubble';
+
 export default function ChatArea() {
     const {
         activeConversationId,
@@ -30,7 +30,6 @@ export default function ChatArea() {
         selectedModel,
         isStreaming,
         setIsStreaming,
-        conversations,
         setConversations,
         systemPrompt,
         setSystemPrompt,
@@ -100,7 +99,7 @@ export default function ChatArea() {
         setIsStreaming(true);
 
         if (inputRef.current) {
-            inputRef.current.style.height = '48px';
+            inputRef.current.style.height = '52px';
         }
 
         const controller = streamChat(
@@ -185,89 +184,106 @@ export default function ChatArea() {
     function handleInput(e: React.ChangeEvent<HTMLTextAreaElement>) {
         setInput(e.target.value);
         const el = e.target;
-        el.style.height = '48px';
-        el.style.height = Math.min(el.scrollHeight, 200) + 'px';
+        el.style.height = '52px';
+        el.style.height = Math.min(el.scrollHeight, 250) + 'px';
     }
 
     const suggestions = [
-        { icon: <Code size={16} />, text: 'Write a Python script', desc: 'to scrape a website' },
-        { icon: <BrainCircuit size={16} />, text: 'Explain a concept', desc: 'like a 5 year old' },
-        { icon: <BookOpen size={16} />, text: 'Summarize this article', desc: 'in bullet points' },
-        { icon: <MessageSquare size={16} />, text: 'Help me draft', desc: 'a professional email' },
+        { icon: <Code size={18} className="text-[#00f0ff]" />, text: 'Write a Python script', desc: 'to scrape a website' },
+        { icon: <BrainCircuit size={18} className="text-[#8a2be2]" />, text: 'Explain a concept', desc: 'like a 5 year old' },
+        { icon: <BookOpen size={18} className="text-[#10b981]" />, text: 'Summarize this article', desc: 'in bullet points' },
+        { icon: <MessageSquare size={18} className="text-[#f59e0b]" />, text: 'Help me draft', desc: 'a professional email' },
     ];
 
     return (
         <div
-            className="flex flex-col h-screen transition-all duration-300"
-            style={{ marginLeft: sidebarOpen ? '288px' : '0' }}
+            className="flex flex-col h-screen transition-all duration-500 ease-in-out relative z-0"
+            style={{ marginLeft: sidebarOpen ? '280px' : '0' }}
         >
+            {/* Ambient Background for Welcome Screen */}
+            {messages.length === 0 && !streamingContent && (
+                <div className="absolute inset-0 z-[-1] overflow-hidden opacity-50 pointer-events-none">
+                    <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#8a2be2] rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-float" />
+                    <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-[#00f0ff] rounded-full mix-blend-screen filter blur-[150px] opacity-10 animate-float" style={{ animationDelay: '-3s' }} />
+                    <div className="absolute inset-0 bg-grid-pattern opacity-50" />
+                </div>
+            )}
+
             {/* Messages Area */}
             <div
                 ref={scrollContainerRef}
-                className="flex-1 overflow-y-auto"
+                className="flex-1 overflow-y-auto scroll-smooth py-6"
             >
                 {messages.length === 0 && !streamingContent ? (
-                    /* Welcome Screen */
+                    /* Premium Welcome Screen */
                     <div className="flex items-center justify-center min-h-full px-4">
-                        <div className="max-w-2xl w-full text-center">
+                        <div className="max-w-3xl w-full text-center">
                             <motion.div
-                                initial={{ scale: 0.5, opacity: 0 }}
+                                initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
-                                transition={{ type: 'spring', damping: 15 }}
+                                transition={{ type: 'spring', damping: 20, stiffness: 100 }}
                             >
-                                <div
-                                    className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-(--color-text-primary)"
-                                >
-                                    <Sparkles size={36} className="text-(--color-bg-primary)" />
+                                <div className="relative w-20 h-20 mx-auto mb-8 glow-effect">
+                                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-[#8a2be2] to-[#00f0ff] animate-spin-slow opacity-50 blur-md" />
+                                    <div className="relative w-full h-full rounded-2xl bg-[#0a0a0c] border border-[rgba(255,255,255,0.1)] flex items-center justify-center shadow-2xl backdrop-blur-xl">
+                                        <Sparkles size={36} className="text-white" />
+                                    </div>
                                 </div>
                             </motion.div>
 
                             <motion.h1
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
-                                transition={{ delay: 0.1 }}
-                                className="text-3xl font-bold mb-2 gradient-text"
+                                transition={{ delay: 0.1, duration: 0.8, ease: "easeOut" }}
+                                className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight text-white"
                             >
-                                Welcome to Zee-AI
+                                Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8a2be2] to-[#00f0ff] animate-pulse">Zee-AI</span>
                             </motion.h1>
+
                             <motion.p
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
-                                transition={{ delay: 0.2 }}
-                                className="text-(--color-text-secondary) mb-8"
+                                transition={{ delay: 0.2, duration: 0.8 }}
+                                className="text-lg text-[#a1a1aa] mb-12 max-w-xl mx-auto font-light"
                             >
-                                Your self-hosted AI assistant. Fast, private, and powerful.
+                                Your premium self-hosted AI orchestrator. Completely private, blazingly fast, and elegantly designed.
                             </motion.p>
 
                             {selectedModel && (
                                 <motion.div
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
-                                    transition={{ delay: 0.25 }}
-                                    className="max-w-xl mx-auto mb-8 bg-(--color-bg-secondary) border border-border-primary rounded-xl p-4 text-left shadow-sm"
+                                    transition={{ delay: 0.3 }}
+                                    className="max-w-2xl mx-auto mb-10 glass-card p-5 text-left"
                                 >
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <Settings2 size={16} className="text-(--color-accent-primary)" />
-                                        <h3 className="text-sm font-semibold text-(--color-text-primary)">System Prompt (Persona)</h3>
+                                    <div className="flex items-center gap-2.5 mb-4">
+                                        <div className="p-1.5 rounded-lg bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.05)]">
+                                            <Settings2 size={16} className="text-[#a1a1aa]" />
+                                        </div>
+                                        <h3 className="text-[15px] font-semibold text-[#f8f8f8] tracking-wide">AI Persona Configuration</h3>
                                     </div>
-                                    <select
-                                        className="w-full bg-(--color-bg-primary) border border-border-primary rounded-lg px-3 py-2 text-sm text-(--color-text-primary) mb-3 outline-none focus:border-(--color-accent-primary) transition-colors cursor-pointer"
-                                        onChange={(e) => setSystemPrompt(e.target.value)}
-                                        value={systemPrompt}
-                                    >
-                                        <option value="">Default (No System Prompt)</option>
-                                        <option value="You are an expert Golang developer. Provide clean, idiomatic, and efficient code. Explain your logic briefly.">Golang Expert (Ahli Golang)</option>
-                                        <option value="You are a professional translator. Translate the given text accurately with natural phrasing, maintaining the original tone.">Professional Translator (Penerjemah Bahasa)</option>
-                                        <option value="You are a professional technical writer. Help me rewrite my content to be clear, concise, and engaging for a technical audience.">Technical Writer</option>
-                                        <option value="You are a patient and creative teacher. Explain concepts as if I am a 5-year-old, using simple analogies and avoiding jargon.">Explain like I'm 5 (ELI5)</option>
-                                    </select>
-                                    <textarea
-                                        className="w-full bg-(--color-bg-primary) border border-border-primary rounded-lg px-3 py-2 text-xs text-(--color-text-secondary) resize-none outline-none focus:border-(--color-accent-primary) transition-colors placeholder:text-text-muted"
-                                        rows={2}
-                                        placeholder="Or type a custom system prompt here..."
-                                        value={systemPrompt}
-                                        onChange={(e) => setSystemPrompt(e.target.value)}
-                                    />
+                                    <div className="space-y-4">
+                                        <div className="relative">
+                                            <select
+                                                className="w-full bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-sm text-[#f8f8f8] outline-none focus:border-[#8a2be2] focus:ring-1 focus:ring-[#8a2be2] transition-all cursor-pointer premium-select appearance-none"
+                                                onChange={(e) => setSystemPrompt(e.target.value)}
+                                                value={systemPrompt}
+                                            >
+                                                <option value="">Default Intelligence (Unrestricted)</option>
+                                                <option value="You are an expert Golang developer. Provide clean, idiomatic, and efficient code. Explain your logic briefly.">Golang Expert Engineer</option>
+                                                <option value="You are a professional translator. Translate the given text accurately with natural phrasing, maintaining the original tone.">Elite Translator</option>
+                                                <option value="You are a professional technical writer. Help me rewrite my content to be clear, concise, and engaging for a technical audience.">Technical Architect Writer</option>
+                                                <option value="You are a patient and creative teacher. Explain concepts as if I am a 5-year-old, using simple analogies and avoiding jargon.">Socratic Teacher (ELI5)</option>
+                                            </select>
+                                        </div>
+                                        <textarea
+                                            className="w-full bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-sm text-[#a1a1aa] resize-none outline-none focus:border-[#8a2be2] focus:ring-1 focus:ring-[#8a2be2] transition-all placeholder:text-[#52525b] custom-scrollbar"
+                                            rows={2}
+                                            placeholder="Or forge a custom imperative instruction here..."
+                                            value={systemPrompt}
+                                            onChange={(e) => setSystemPrompt(e.target.value)}
+                                        />
+                                    </div>
                                 </motion.div>
                             )}
 
@@ -275,8 +291,8 @@ export default function ChatArea() {
                                 <motion.div
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
-                                    transition={{ delay: 0.3 }}
-                                    className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto"
+                                    transition={{ delay: 0.4 }}
+                                    className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto"
                                 >
                                     {suggestions.map((s, i) => (
                                         <button
@@ -285,16 +301,20 @@ export default function ChatArea() {
                                                 setInput(`${s.text} ${s.desc}`);
                                                 inputRef.current?.focus();
                                             }}
-                                            className="glass-card p-4 text-left hover:bg-(--color-bg-hover) transition-all group cursor-pointer"
+                                            className="glass-card p-5 text-left group cursor-pointer hover:bg-[rgba(255,255,255,0.02)]"
                                         >
-                                            <div className="flex items-center gap-2 mb-1.5 text-(--color-accent-secondary)">
-                                                {s.icon}
-                                            </div>
-                                            <div className="text-sm font-medium text-(--color-text-primary)">
-                                                {s.text}
-                                            </div>
-                                            <div className="text-xs text-text-muted">
-                                                {s.desc}
+                                            <div className="flex items-start gap-4">
+                                                <div className="p-2.5 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] shadow-inner transition-transform group-hover:scale-110 duration-300">
+                                                    {s.icon}
+                                                </div>
+                                                <div>
+                                                    <div className="text-[15px] font-semibold text-[#f8f8f8] mb-1 group-hover:text-white transition-colors">
+                                                        {s.text}
+                                                    </div>
+                                                    <div className="text-[13px] text-[#71717a] font-medium">
+                                                        {s.desc}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </button>
                                     ))}
@@ -304,25 +324,29 @@ export default function ChatArea() {
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.3 }}
-                                    className="glass-card p-6 max-w-md mx-auto"
+                                    className="glass-card p-8 max-w-md mx-auto text-center border-[#f59e0b]/30"
                                 >
-                                    <Cpu size={24} className="mx-auto mb-3 text-warning" />
-                                    <p className="text-sm font-medium text-(--color-text-primary) mb-2">
-                                        No AI model selected
+                                    <div className="w-16 h-16 mx-auto bg-[#f59e0b]/10 rounded-full flex items-center justify-center mb-4">
+                                        <Cpu size={28} className="text-[#f59e0b]" />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-white mb-2">
+                                        Awaiting Intelligence Provider
+                                    </h3>
+                                    <p className="text-sm text-[#a1a1aa] mb-6 leading-relaxed">
+                                        Ensure your local Ollama instance is operational and a model is acquired within the framework.
                                     </p>
-                                    <p className="text-xs text-text-muted mb-3">
-                                        Make sure Ollama is running and you have at least one model installed.
-                                    </p>
-                                    <code className="text-xs text-(--color-accent-secondary) bg-(--color-bg-primary) px-3 py-1.5 rounded-lg">
-                                        ollama pull gemma3
-                                    </code>
+                                    <div className="bg-black/50 border border-[rgba(255,255,255,0.05)] px-4 py-3 rounded-xl flex items-center justify-between group">
+                                        <code className="text-sm text-[#00f0ff] font-mono">
+                                            ollama pull gemma3
+                                        </code>
+                                    </div>
                                 </motion.div>
                             )}
                         </div>
                     </div>
                 ) : (
                     /* Message List */
-                    <div className="max-w-3xl mx-auto w-full">
+                    <div className="max-w-4xl mx-auto w-full px-4 pb-8">
                         {messages.map((msg) => (
                             <MessageBubble key={msg.id} message={msg} />
                         ))}
@@ -342,44 +366,32 @@ export default function ChatArea() {
                             />
                         )}
 
-                        <div ref={messagesEndRef} className="h-4" />
+                        <div ref={messagesEndRef} className="h-6" />
                     </div>
                 )}
             </div>
 
-            {/* Scroll to bottom */}
+            {/* Scroll to bottom button */}
             <AnimatePresence>
                 {showScrollBtn && (
                     <motion.button
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, y: 20 }}
                         onClick={scrollToBottom}
-                        className="fixed bottom-28 left-1/2 -translate-x-1/2 p-2 rounded-full glass hover:bg-(--color-bg-hover) transition-colors z-10"
-                        style={{ marginLeft: sidebarOpen ? '144px' : '0' }}
+                        className="fixed bottom-32 left-1/2 -translate-x-1/2 p-3 rounded-full bg-[rgba(30,30,38,0.8)] backdrop-blur-md border border-[rgba(255,255,255,0.1)] text-white shadow-xl hover:bg-[rgba(40,40,50,0.9)] transition-all z-20 group"
+                        style={{ marginLeft: sidebarOpen ? '140px' : '0' }}
                     >
-                        <ArrowDown size={18} />
+                        <ArrowDown size={18} className="group-hover:translate-y-0.5 transition-transform" />
                     </motion.button>
                 )}
             </AnimatePresence>
 
-            {/* Input Area */}
-            <div
-                className="p-4"
-                style={{
-                    background:
-                        'linear-gradient(to top, var(--color-bg-primary) 60%, transparent)',
-                }}
-            >
-                <div className="max-w-3xl mx-auto">
-                    <div
-                        className="rounded-[24px] overflow-hidden transition-all"
-                        style={{
-                            background: 'var(--color-bg-secondary)',
-                            border: '1px solid var(--color-border-primary)',
-                        }}
-                    >
-                        <div className="flex items-end gap-2 p-2">
+            {/* Premium Input Area */}
+            <div className="p-4 sm:p-6 w-full relative z-10 before:absolute before:inset-x-0 before:bottom-0 before:h-40 before:bg-gradient-to-t before:from-[#0a0a0c] before:via-[#0a0a0c]/80 before:to-transparent before:-z-10 pointer-events-none">
+                <div className="max-w-4xl mx-auto pointer-events-auto">
+                    <div className="input-premium relative">
+                        <div className="flex items-end gap-3 p-3">
                             <textarea
                                 ref={inputRef}
                                 value={input}
@@ -387,45 +399,54 @@ export default function ChatArea() {
                                 onKeyDown={handleKeyDown}
                                 placeholder={
                                     selectedModel
-                                        ? 'Send a message...'
-                                        : 'Select a model from the sidebar first...'
+                                        ? "Message Zee-AI... (Shift + Enter for new line)"
+                                        : "Initialize a model to begin interaction..."
                                 }
                                 disabled={!selectedModel}
                                 rows={1}
-                                className="flex-1 bg-transparent border-none outline-none resize-none text-sm px-3 py-3 text-(--color-text-primary) placeholder:text-text-muted disabled:opacity-50"
-                                style={{ minHeight: '48px', maxHeight: '200px' }}
+                                className="flex-1 bg-transparent border-none outline-none resize-none text-[15px] px-3 py-3 text-white placeholder:text-[#52525b] disabled:opacity-50 font-medium leading-relaxed custom-scrollbar"
+                                style={{ minHeight: '52px', maxHeight: '250px' }}
                             />
 
                             {isStreaming ? (
                                 <button
                                     onClick={handleStop}
-                                    className="shrink-0 p-2.5 rounded-xl bg-error bg-opacity-20 text-error hover:bg-opacity-30 transition-colors"
+                                    className="shrink-0 p-3.5 mb-1 mr-1 rounded-xl bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 hover:bg-[#ef4444]/20 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all"
                                 >
-                                    <StopCircle size={20} />
+                                    <StopCircle size={20} className="animate-pulse" />
                                 </button>
                             ) : (
                                 <button
                                     onClick={handleSend}
                                     disabled={!input.trim() || !selectedModel}
-                                    className="shrink-0 p-2.5 rounded-full transition-all disabled:opacity-30"
+                                    className="shrink-0 p-3.5 mb-1 mr-1 rounded-xl transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed group relative overflow-hidden"
                                     style={{
-                                        background:
-                                            input.trim() && selectedModel
-                                                ? 'var(--color-text-primary)'
-                                                : 'var(--color-bg-hover)',
+                                        background: input.trim() && selectedModel
+                                            ? 'linear-gradient(135deg, #8a2be2, #00f0ff)'
+                                            : 'rgba(255,255,255,0.05)',
+                                        boxShadow: input.trim() && selectedModel
+                                            ? '0 4px 15px rgba(138,43,226,0.3)'
+                                            : 'none'
                                     }}
                                 >
-                                    <Send size={20} className={input.trim() && selectedModel ? "text-(--color-bg-primary)" : "text-text-muted"} />
+                                    {input.trim() && selectedModel && (
+                                        <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    )}
+                                    <Send size={20} className={`${input.trim() && selectedModel ? "text-white" : "text-[#71717a]"} relative z-10 ${input.trim() && selectedModel ? "group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" : ""}`} />
                                 </button>
                             )}
                         </div>
                     </div>
 
-                    <p className="text-center text-xs text-text-muted mt-2">
-                        Zee-AI runs locally on your machine. Your data never leaves your device.
-                    </p>
+                    <div className="text-center mt-3 flex justify-center items-center gap-2">
+                        <Sparkles size={12} className="text-[#8a2be2]" />
+                        <p className="text-xs font-medium text-[#71717a]">
+                            Zee-AI operates autonomously on your hardware. Absolute privacy guaranteed.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     );
 }
+
