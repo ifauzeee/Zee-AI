@@ -23,6 +23,7 @@ interface AppState {
 
     isStreaming: boolean;
     setIsStreaming: (streaming: boolean) => void;
+
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -52,4 +53,5 @@ export const useStore = create<AppState>((set) => ({
 
     isStreaming: false,
     setIsStreaming: (streaming) => set({ isStreaming: streaming }),
+
 }));

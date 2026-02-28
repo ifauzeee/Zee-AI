@@ -80,7 +80,7 @@ export default function Sidebar() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     onClick={toggleSidebar}
-                    className="fixed top-4 left-4 z-50 p-2.5 rounded-xl glass hover:bg-[var(--color-bg-hover)] transition-colors"
+                    className="fixed top-4 left-4 z-50 p-2.5 rounded-xl glass hover:bg-(--color-bg-hover) transition-colors"
                     aria-label="Open sidebar"
                 >
                     <PanelLeftOpen size={20} />
@@ -104,18 +104,18 @@ export default function Sidebar() {
                         <div className="p-4 flex items-center justify-between">
                             <div className="flex items-center gap-2.5">
                                 <div
-                                    className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-[var(--color-text-primary)]"
+                                    className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-(--color-text-primary)"
                                 >
-                                    <Zap size={16} className="text-[var(--color-bg-primary)]" />
+                                    <Zap size={16} className="text-(--color-bg-primary)" />
                                 </div>
                                 <span className="font-bold text-lg gradient-text">Zee-AI</span>
                             </div>
                             <button
                                 onClick={toggleSidebar}
-                                className="p-1.5 rounded-lg hover:bg-[var(--color-bg-hover)] transition-colors"
+                                className="p-1.5 rounded-lg hover:bg-(--color-bg-hover) transition-colors"
                                 aria-label="Close sidebar"
                             >
-                                <PanelLeftClose size={18} className="text-[var(--color-text-tertiary)]" />
+                                <PanelLeftClose size={18} className="text-(--color-text-tertiary)" />
                             </button>
                         </div>
 
@@ -135,11 +135,11 @@ export default function Sidebar() {
                         <div className="px-3 mb-3">
                             <button
                                 onClick={() => setShowModels(!showModels)}
-                                className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-left hover:bg-[var(--color-bg-hover)] transition-colors"
+                                className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-left hover:bg-(--color-bg-hover) transition-colors"
                                 style={{ border: '1px solid var(--color-border-primary)' }}
                             >
-                                <Cpu size={14} className="text-[var(--color-accent-secondary)] shrink-0" />
-                                <span className="truncate flex-1 text-[var(--color-text-secondary)]">
+                                <Cpu size={14} className="text-(--color-accent-secondary) shrink-0" />
+                                <span className="truncate flex-1 text-(--color-text-secondary)">
                                     {selectedModel || 'Select model...'}
                                 </span>
                             </button>
@@ -157,9 +157,9 @@ export default function Sidebar() {
                                         }}
                                     >
                                         {models.length === 0 ? (
-                                            <div className="p-3 text-xs text-center text-[var(--color-text-muted)]">
+                                            <div className="p-3 text-xs text-center text-text-muted">
                                                 No models found. Run:<br />
-                                                <code className="text-[var(--color-accent-secondary)]">ollama pull gemma3</code>
+                                                <code className="text-(--color-accent-secondary)">ollama pull gemma3</code>
                                             </div>
                                         ) : (
                                             <div className="max-h-48 overflow-y-auto p-1">
@@ -171,12 +171,12 @@ export default function Sidebar() {
                                                             setShowModels(false);
                                                         }}
                                                         className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${selectedModel === m.name
-                                                            ? 'bg-[var(--color-accent-primary)] bg-opacity-20 text-[var(--color-accent-secondary)]'
-                                                            : 'hover:bg-[var(--color-bg-hover)] text-[var(--color-text-secondary)]'
+                                                            ? 'bg-(--color-accent-primary) bg-opacity-20 text-(--color-accent-secondary)'
+                                                            : 'hover:bg-(--color-bg-hover) text-(--color-text-secondary)'
                                                             }`}
                                                     >
                                                         <div className="font-medium truncate">{m.name}</div>
-                                                        <div className="text-xs text-[var(--color-text-muted)]">
+                                                        <div className="text-xs text-text-muted">
                                                             {m.details?.parameter_size} · {m.details?.quantization_level}
                                                         </div>
                                                     </button>
@@ -190,7 +190,7 @@ export default function Sidebar() {
 
                         {/* Conversations List */}
                         <div className="flex-1 overflow-y-auto px-2">
-                            <div className="px-2 py-1.5 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">
+                            <div className="px-2 py-1.5 text-xs font-semibold text-text-muted uppercase tracking-wider">
                                 <MessagesSquare size={12} className="inline mr-1.5" />
                                 Conversations
                             </div>
@@ -201,8 +201,8 @@ export default function Sidebar() {
                                         layout
                                         onClick={() => setActiveConversationId(convo.id)}
                                         className={`group w-full text-left px-3 py-2.5 rounded-xl text-sm transition-all relative cursor-pointer ${activeConversationId === convo.id
-                                            ? 'bg-[var(--color-bg-hover)]'
-                                            : 'hover:bg-[var(--color-bg-hover)]'
+                                            ? 'bg-(--color-bg-hover)'
+                                            : 'hover:bg-(--color-bg-hover)'
                                             }`}
                                         style={
                                             activeConversationId === convo.id
@@ -210,15 +210,15 @@ export default function Sidebar() {
                                                 : {}
                                         }
                                     >
-                                        <div className="truncate font-medium text-[var(--color-text-primary)] pr-6">
+                                        <div className="truncate font-medium text-(--color-text-primary) pr-6">
                                             {convo.title}
                                         </div>
-                                        <div className="text-xs text-[var(--color-text-muted)] mt-0.5">
+                                        <div className="text-xs text-text-muted mt-0.5">
                                             {timeAgo(convo.updated_at)}
                                         </div>
                                         <button
                                             onClick={(e) => handleDelete(convo.id, e)}
-                                            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-[var(--color-error)] hover:bg-opacity-20 hover:text-[var(--color-error)] transition-all"
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-error hover:bg-opacity-20 hover:text-error transition-all"
                                             aria-label="Delete conversation"
                                         >
                                             <Trash2 size={14} />
@@ -230,12 +230,12 @@ export default function Sidebar() {
                                     <div className="text-center py-8 px-4">
                                         <MessagesSquare
                                             size={32}
-                                            className="mx-auto mb-3 text-[var(--color-text-muted)]"
+                                            className="mx-auto mb-3 text-text-muted"
                                         />
-                                        <p className="text-sm text-[var(--color-text-muted)]">
+                                        <p className="text-sm text-text-muted">
                                             No conversations yet
                                         </p>
-                                        <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                                        <p className="text-xs text-text-muted mt-1">
                                             Start a new chat above
                                         </p>
                                     </div>
@@ -248,9 +248,9 @@ export default function Sidebar() {
                             className="p-3"
                             style={{ borderTop: '1px solid var(--color-border-primary)' }}
                         >
-                            <div className="flex items-center gap-2 text-xs text-[var(--color-text-muted)]">
+                            <div className="flex items-center gap-2 text-xs text-text-muted">
                                 <div
-                                    className={`w-2 h-2 rounded-full ${models.length > 0 ? 'bg-[var(--color-success)]' : 'bg-[var(--color-error)]'
+                                    className={`w-2 h-2 rounded-full ${models.length > 0 ? 'bg-success' : 'bg-error'
                                         }`}
                                 />
                                 {models.length > 0

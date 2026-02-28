@@ -23,7 +23,6 @@ import {
     type ChatStreamChunk,
 } from '@/lib/api';
 import MessageBubble from './MessageBubble';
-
 export default function ChatArea() {
     const {
         activeConversationId,
@@ -374,50 +373,52 @@ export default function ChatArea() {
             >
                 <div className="max-w-3xl mx-auto">
                     <div
-                        className="flex items-end gap-2 rounded-[24px] p-2 transition-all"
+                        className="rounded-[24px] overflow-hidden transition-all"
                         style={{
                             background: 'var(--color-bg-secondary)',
                             border: '1px solid var(--color-border-primary)',
                         }}
                     >
-                        <textarea
-                            ref={inputRef}
-                            value={input}
-                            onChange={handleInput}
-                            onKeyDown={handleKeyDown}
-                            placeholder={
-                                selectedModel
-                                    ? 'Send a message...'
-                                    : 'Select a model from the sidebar first...'
-                            }
-                            disabled={!selectedModel}
-                            rows={1}
-                            className="flex-1 bg-transparent border-none outline-none resize-none text-sm px-3 py-3 text-(--color-text-primary) placeholder:text-text-muted disabled:opacity-50"
-                            style={{ minHeight: '48px', maxHeight: '200px' }}
-                        />
+                        <div className="flex items-end gap-2 p-2">
+                            <textarea
+                                ref={inputRef}
+                                value={input}
+                                onChange={handleInput}
+                                onKeyDown={handleKeyDown}
+                                placeholder={
+                                    selectedModel
+                                        ? 'Send a message...'
+                                        : 'Select a model from the sidebar first...'
+                                }
+                                disabled={!selectedModel}
+                                rows={1}
+                                className="flex-1 bg-transparent border-none outline-none resize-none text-sm px-3 py-3 text-(--color-text-primary) placeholder:text-text-muted disabled:opacity-50"
+                                style={{ minHeight: '48px', maxHeight: '200px' }}
+                            />
 
-                        {isStreaming ? (
-                            <button
-                                onClick={handleStop}
-                                className="shrink-0 p-2.5 rounded-xl bg-error bg-opacity-20 text-error hover:bg-opacity-30 transition-colors"
-                            >
-                                <StopCircle size={20} />
-                            </button>
-                        ) : (
-                            <button
-                                onClick={handleSend}
-                                disabled={!input.trim() || !selectedModel}
-                                className="shrink-0 p-2.5 rounded-full transition-all disabled:opacity-30"
-                                style={{
-                                    background:
-                                        input.trim() && selectedModel
-                                            ? 'var(--color-text-primary)'
-                                            : 'var(--color-bg-hover)',
-                                }}
-                            >
-                                <Send size={20} className={input.trim() && selectedModel ? "text-(--color-bg-primary)" : "text-text-muted"} />
-                            </button>
-                        )}
+                            {isStreaming ? (
+                                <button
+                                    onClick={handleStop}
+                                    className="shrink-0 p-2.5 rounded-xl bg-error bg-opacity-20 text-error hover:bg-opacity-30 transition-colors"
+                                >
+                                    <StopCircle size={20} />
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleSend}
+                                    disabled={!input.trim() || !selectedModel}
+                                    className="shrink-0 p-2.5 rounded-full transition-all disabled:opacity-30"
+                                    style={{
+                                        background:
+                                            input.trim() && selectedModel
+                                                ? 'var(--color-text-primary)'
+                                                : 'var(--color-bg-hover)',
+                                    }}
+                                >
+                                    <Send size={20} className={input.trim() && selectedModel ? "text-(--color-bg-primary)" : "text-text-muted"} />
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     <p className="text-center text-xs text-text-muted mt-2">

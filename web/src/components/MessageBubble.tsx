@@ -28,87 +28,108 @@ export default function MessageBubble({ message, isStreaming }: MessageBubblePro
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25 }}
-            className={`group flex gap-3 px-4 py-5`}
+            className={`group flex w-full px-4 py-5 ${isUser ? 'justify-end' : 'justify-start'}`}
         >
-            {/* Avatar */}
-            <div className="shrink-0 mt-0.5">
-                {isUser ? (
-                    <div
-                        className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)]"
-                    >
-                        <User size={16} className="text-[var(--color-text-primary)]" />
-                    </div>
-                ) : (
-                    <div
-                        className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-[var(--color-text-primary)]"
-                    >
-                        <Sparkles size={16} className="text-[var(--color-bg-primary)]" />
-                    </div>
-                )}
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-semibold text-[var(--color-text-secondary)]">
-                        {isUser ? 'You' : 'Zee-AI'}
-                    </span>
-                    {message.model && (
-                        <span className="text-xs text-[var(--color-text-muted)]">
-                            · {message.model}
-                        </span>
-                    )}
-                    {message.duration && message.duration > 0 && (
-                        <span className="text-xs text-[var(--color-text-muted)]">
-                            · {formatDuration(message.duration)}
-                        </span>
-                    )}
-                    {message.tokens_used && message.tokens_used > 0 && (
-                        <span className="text-xs text-[var(--color-text-muted)]">
-                            · {message.tokens_used} tokens
-                        </span>
-                    )}
-                </div>
-
-                <div className="markdown-content text-[var(--color-text-primary)]">
+            <div className={`flex gap-3 w-full md:max-w-[85%] ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
+                {/* Avatar */}
+                <div className="shrink-0 mt-0.5">
                     {isUser ? (
-                        <p className="whitespace-pre-wrap">{message.content}</p>
+                        <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center bg-(--color-bg-tertiary) border border-border-primary shadow-sm"
+                        >
+                            <User size={14} className="text-(--color-text-secondary)" />
+                        </div>
                     ) : (
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {message.content}
-                        </ReactMarkdown>
-                    )}
-
-                    {isStreaming && !message.content && (
-                        <div className="flex items-center gap-1.5 py-2">
-                            <span className="typing-dot w-2 h-2 rounded-full bg-[var(--color-accent-secondary)]" />
-                            <span className="typing-dot w-2 h-2 rounded-full bg-[var(--color-accent-secondary)]" />
-                            <span className="typing-dot w-2 h-2 rounded-full bg-[var(--color-accent-secondary)]" />
+                        <div
+                            className="w-8 h-8 rounded-xl flex items-center justify-center bg-(--color-text-primary) shadow-sm"
+                        >
+                            <Sparkles size={16} className="text-(--color-bg-primary)" />
                         </div>
                     )}
                 </div>
 
-                {/* Actions */}
-                {!isUser && message.content && !isStreaming && (
-                    <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                            onClick={copyContent}
-                            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] transition-colors"
-                        >
-                            {copied ? (
-                                <>
-                                    <Check size={12} className="text-[var(--color-success)]" />
-                                    Copied
-                                </>
-                            ) : (
-                                <>
-                                    <Copy size={12} />
-                                    Copy
-                                </>
-                            )}
-                        </button>
+                {/* Content Container */}
+                <div className={`flex flex-col min-w-0 max-w-full ${isUser ? 'items-end' : 'items-start'}`}>
+                    <div className={`flex items-center gap-2 mb-1.5 ${isUser ? 'mr-1' : 'ml-1'}`}>
+                        <span className="text-xs font-semibold text-(--color-text-secondary)">
+                            {isUser ? 'You' : 'Zee-AI'}
+                        </span>
+                        {!isUser && message.model && (
+                            <span className="text-xs text-text-muted">
+                                · {message.model}
+                            </span>
+                        )}
+                        {!isUser && message.duration && message.duration > 0 && (
+                            <span className="text-xs text-text-muted">
+                                · {formatDuration(message.duration)}
+                            </span>
+                        )}
+                        {!isUser && message.tokens_used && message.tokens_used > 0 && (
+                            <span className="text-xs text-text-muted">
+                                · {message.tokens_used} tokens
+                            </span>
+                        )}
                     </div>
-                )}
+
+                    <div
+                        className={`relative max-w-full ${isUser
+                                ? 'bg-(--color-bg-secondary) text-(--color-text-primary) px-4 py-2.5 rounded-2xl rounded-tr-sm border border-border-primary shadow-sm'
+                                : 'text-(--color-text-primary) ml-1'
+                            }`}
+                    >
+                        <div className={`markdown-content overflow-x-auto text-[15px] leading-relaxed ${isUser ? 'whitespace-pre-wrap' : ''}`}>
+                            {isUser ? (
+                                message.content
+                            ) : (
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {message.content}
+                                </ReactMarkdown>
+                            )}
+                        </div>
+
+                        {isStreaming && !message.content && (
+                            <div className="flex items-center gap-1.5 py-2">
+                                <motion.span
+                                    animate={{ opacity: [0.4, 1, 0.4] }}
+                                    transition={{ repeat: Infinity, duration: 1.4, delay: 0 }}
+                                    className="w-2 h-2 rounded-full bg-(--color-accent-secondary)"
+                                />
+                                <motion.span
+                                    animate={{ opacity: [0.4, 1, 0.4] }}
+                                    transition={{ repeat: Infinity, duration: 1.4, delay: 0.2 }}
+                                    className="w-2 h-2 rounded-full bg-(--color-accent-secondary)"
+                                />
+                                <motion.span
+                                    animate={{ opacity: [0.4, 1, 0.4] }}
+                                    transition={{ repeat: Infinity, duration: 1.4, delay: 0.4 }}
+                                    className="w-2 h-2 rounded-full bg-(--color-accent-secondary)"
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Actions */}
+                    {!isUser && message.content && !isStreaming && (
+                        <div className="mt-2 ml-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                                onClick={copyContent}
+                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs text-text-muted hover:text-(--color-text-secondary) hover:bg-(--color-bg-hover) transition-colors"
+                            >
+                                {copied ? (
+                                    <>
+                                        <Check size={12} className="text-success" />
+                                        Copied
+                                    </>
+                                ) : (
+                                    <>
+                                        <Copy size={12} />
+                                        Copy
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
         </motion.div>
     );
