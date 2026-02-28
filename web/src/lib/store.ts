@@ -7,6 +7,9 @@ interface AppState {
     setModels: (models: Model[]) => void;
     setSelectedModel: (model: string) => void;
 
+    systemPrompt: string;
+    setSystemPrompt: (prompt: string) => void;
+
     conversations: Conversation[];
     activeConversationId: string | null;
     setConversations: (conversations: Conversation[]) => void;
@@ -27,6 +30,9 @@ export const useStore = create<AppState>((set) => ({
     selectedModel: '',
     setModels: (models) => set({ models }),
     setSelectedModel: (model) => set({ selectedModel: model }),
+
+    systemPrompt: '',
+    setSystemPrompt: (prompt) => set({ systemPrompt: prompt }),
 
     conversations: [],
     activeConversationId: null,

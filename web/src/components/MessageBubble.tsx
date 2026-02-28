@@ -28,29 +28,21 @@ export default function MessageBubble({ message, isStreaming }: MessageBubblePro
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25 }}
-            className={`group flex gap-3 px-4 py-5 ${isUser ? '' : 'bg-[var(--color-bg-secondary)] bg-opacity-50'
-                }`}
+            className={`group flex gap-3 px-4 py-5`}
         >
             {/* Avatar */}
             <div className="shrink-0 mt-0.5">
                 {isUser ? (
                     <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center"
-                        style={{
-                            background: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
-                        }}
+                        className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)]"
                     >
-                        <User size={16} className="text-white" />
+                        <User size={16} className="text-[var(--color-text-primary)]" />
                     </div>
                 ) : (
                     <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center"
-                        style={{
-                            background:
-                                'linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-gradient-to))',
-                        }}
+                        className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-[var(--color-text-primary)]"
                     >
-                        <Sparkles size={16} className="text-white" />
+                        <Sparkles size={16} className="text-[var(--color-bg-primary)]" />
                     </div>
                 )}
             </div>

@@ -104,13 +104,9 @@ export default function Sidebar() {
                         <div className="p-4 flex items-center justify-between">
                             <div className="flex items-center gap-2.5">
                                 <div
-                                    className="w-8 h-8 rounded-lg flex items-center justify-center"
-                                    style={{
-                                        background:
-                                            'linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-gradient-to))',
-                                    }}
+                                    className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-[var(--color-text-primary)]"
                                 >
-                                    <Zap size={16} className="text-white" />
+                                    <Zap size={16} className="text-[var(--color-bg-primary)]" />
                                 </div>
                                 <span className="font-bold text-lg gradient-text">Zee-AI</span>
                             </div>
@@ -200,11 +196,11 @@ export default function Sidebar() {
                             </div>
                             <div className="space-y-0.5">
                                 {conversations.map((convo) => (
-                                    <motion.button
+                                    <motion.div
                                         key={convo.id}
                                         layout
                                         onClick={() => setActiveConversationId(convo.id)}
-                                        className={`group w-full text-left px-3 py-2.5 rounded-xl text-sm transition-all relative ${activeConversationId === convo.id
+                                        className={`group w-full text-left px-3 py-2.5 rounded-xl text-sm transition-all relative cursor-pointer ${activeConversationId === convo.id
                                             ? 'bg-[var(--color-bg-hover)]'
                                             : 'hover:bg-[var(--color-bg-hover)]'
                                             }`}
@@ -227,7 +223,7 @@ export default function Sidebar() {
                                         >
                                             <Trash2 size={14} />
                                         </button>
-                                    </motion.button>
+                                    </motion.div>
                                 ))}
 
                                 {conversations.length === 0 && (

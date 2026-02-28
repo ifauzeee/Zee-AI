@@ -191,6 +191,7 @@ type ChatAPIRequest struct {
 	ConversationID string          `json:"conversation_id"`
 	Model          string          `json:"model"`
 	Message        string          `json:"message"`
+	SystemPrompt   string          `json:"system_prompt,omitempty"`
 	Options        *ollama.Options `json:"options,omitempty"`
 }
 
@@ -214,6 +215,17 @@ func (h *Handler) ChatStream(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		req.ConversationID = id
+
+		if req.SystemPrompt != "" {
+			systemMsg := &db.Message{
+				ID:             uuid.New().String(),
+				ConversationID: req.ConversationID,
+				Role:           "system",
+				Content:        req.SystemPrompt,
+				CreatedAt:      time.Now(),
+			}
+			h.db.CreateMessage(systemMsg)
+		}
 	}
 
 	userMsg := &db.Message{

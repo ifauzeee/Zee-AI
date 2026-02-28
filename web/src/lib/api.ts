@@ -113,6 +113,7 @@ export function streamChat(
     conversationId: string | null,
     model: string,
     message: string,
+    systemPrompt: string | undefined,
     onChunk: (chunk: ChatStreamChunk) => void,
     onDone: () => void,
     onError: (error: string) => void,
@@ -126,6 +127,7 @@ export function streamChat(
             conversation_id: conversationId,
             model,
             message,
+            system_prompt: systemPrompt,
         }),
         signal: controller.signal,
     })

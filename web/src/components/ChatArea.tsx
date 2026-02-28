@@ -13,6 +13,7 @@ import {
     BrainCircuit,
     Code,
     BookOpen,
+    Settings2,
 } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import {
@@ -32,6 +33,8 @@ export default function ChatArea() {
         setIsStreaming,
         conversations,
         setConversations,
+        systemPrompt,
+        setSystemPrompt,
     } = useStore();
 
     const [messages, setMessages] = useState<Message[]>([]);
@@ -105,6 +108,7 @@ export default function ChatArea() {
             activeConversationId,
             selectedModel,
             userMessage.content,
+            systemPrompt,
             (chunk: ChatStreamChunk) => {
                 if (chunk.type === 'init' && chunk.conversation_id) {
                     setActiveConversationId(chunk.conversation_id);
@@ -213,14 +217,9 @@ export default function ChatArea() {
                                 transition={{ type: 'spring', damping: 15 }}
                             >
                                 <div
-                                    className="w-20 h-20 rounded-2xl mx-auto mb-6 flex items-center justify-center"
-                                    style={{
-                                        background:
-                                            'linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-gradient-to))',
-                                        boxShadow: '0 0 40px var(--color-accent-glow)',
-                                    }}
+                                    className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-[var(--color-text-primary)]"
                                 >
-                                    <Sparkles size={36} className="text-white" />
+                                    <Sparkles size={36} className="text-[var(--color-bg-primary)]" />
                                 </div>
                             </motion.div>
 
@@ -240,6 +239,38 @@ export default function ChatArea() {
                             >
                                 Your self-hosted AI assistant. Fast, private, and powerful.
                             </motion.p>
+
+                            {selectedModel && (
+                                <motion.div
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.25 }}
+                                    className="max-w-xl mx-auto mb-8 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl p-4 text-left shadow-sm"
+                                >
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Settings2 size={16} className="text-[var(--color-accent-primary)]" />
+                                        <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">System Prompt (Persona)</h3>
+                                    </div>
+                                    <select
+                                        className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-primary)] mb-3 outline-none focus:border-[var(--color-accent-primary)] transition-colors cursor-pointer"
+                                        onChange={(e) => setSystemPrompt(e.target.value)}
+                                        value={systemPrompt}
+                                    >
+                                        <option value="">Default (No System Prompt)</option>
+                                        <option value="You are an expert Golang developer. Provide clean, idiomatic, and efficient code. Explain your logic briefly.">Golang Expert (Ahli Golang)</option>
+                                        <option value="You are a professional translator. Translate the given text accurately with natural phrasing, maintaining the original tone.">Professional Translator (Penerjemah Bahasa)</option>
+                                        <option value="You are a professional technical writer. Help me rewrite my content to be clear, concise, and engaging for a technical audience.">Technical Writer</option>
+                                        <option value="You are a patient and creative teacher. Explain concepts as if I am a 5-year-old, using simple analogies and avoiding jargon.">Explain like I'm 5 (ELI5)</option>
+                                    </select>
+                                    <textarea
+                                        className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded-lg px-3 py-2 text-xs text-[var(--color-text-secondary)] resize-none outline-none focus:border-[var(--color-accent-primary)] transition-colors placeholder:text-[var(--color-text-muted)]"
+                                        rows={2}
+                                        placeholder="Or type a custom system prompt here..."
+                                        value={systemPrompt}
+                                        onChange={(e) => setSystemPrompt(e.target.value)}
+                                    />
+                                </motion.div>
+                            )}
 
                             {selectedModel ? (
                                 <motion.div
@@ -343,7 +374,7 @@ export default function ChatArea() {
             >
                 <div className="max-w-3xl mx-auto">
                     <div
-                        className="flex items-end gap-2 rounded-2xl p-2 transition-all"
+                        className="flex items-end gap-2 rounded-[24px] p-2 transition-all"
                         style={{
                             background: 'var(--color-bg-secondary)',
                             border: '1px solid var(--color-border-primary)',
@@ -376,15 +407,15 @@ export default function ChatArea() {
                             <button
                                 onClick={handleSend}
                                 disabled={!input.trim() || !selectedModel}
-                                className="shrink-0 p-2.5 rounded-xl transition-all disabled:opacity-30"
+                                className="shrink-0 p-2.5 rounded-full transition-all disabled:opacity-30"
                                 style={{
                                     background:
                                         input.trim() && selectedModel
-                                            ? 'linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-gradient-to))'
+                                            ? 'var(--color-text-primary)'
                                             : 'var(--color-bg-hover)',
                                 }}
                             >
-                                <Send size={20} className="text-white" />
+                                <Send size={20} className={input.trim() && selectedModel ? "text-[var(--color-bg-primary)]" : "text-[var(--color-text-muted)]"} />
                             </button>
                         )}
                     </div>

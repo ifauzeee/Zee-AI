@@ -5,36 +5,36 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Premium Dark Palette */
-  --color-bg-primary: #0a0a0f;
-  --color-bg-secondary: #12121a;
-  --color-bg-tertiary: #1a1a2e;
-  --color-bg-hover: #22223a;
-  --color-bg-active: #2a2a45;
+  /* AMOLED Dark Palette - Grok Style */
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #000000;
+  --color-bg-tertiary: #16181c;
+  --color-bg-hover: #16181c;
+  --color-bg-active: #202327;
 
   /* Accent */
-  --color-accent-primary: #7c3aed;
-  --color-accent-secondary: #a855f7;
-  --color-accent-glow: #7c3aed33;
-  --color-accent-gradient-from: #7c3aed;
-  --color-accent-gradient-to: #3b82f6;
+  --color-accent-primary: #ffffff;
+  --color-accent-secondary: #e7e9ea;
+  --color-accent-glow: transparent;
+  --color-accent-gradient-from: #ffffff;
+  --color-accent-gradient-to: #e7e9ea;
 
   /* Text */
-  --color-text-primary: #f0f0f5;
-  --color-text-secondary: #9ca3b0;
-  --color-text-tertiary: #6b7280;
-  --color-text-muted: #4b5263;
+  --color-text-primary: #e7e9ea;
+  --color-text-secondary: #71767b;
+  --color-text-tertiary: #71767b;
+  --color-text-muted: #536471;
 
   /* Borders */
-  --color-border-primary: #1e1e32;
-  --color-border-hover: #2e2e4a;
-  --color-border-active: #7c3aed55;
+  --color-border-primary: #2f3336;
+  --color-border-hover: #3e4144;
+  --color-border-active: #ffffff;
 
   /* Status */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
+  --color-success: #00ba7c;
+  --color-warning: #ffd400;
+  --color-error: #f4212e;
+  --color-info: #1d9bf0;
 
   /* Fonts */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -73,49 +73,44 @@ body {
 
 /* ━━━ Glassmorphism ━━━ */
 
+/* ━━━ Simplified Panels ━━━ */
+
 .glass {
-  background: rgba(18, 18, 26, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: var(--color-bg-primary);
   border: 1px solid var(--color-border-primary);
 }
 
 .glass-card {
-  background: rgba(26, 26, 46, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--color-bg-primary);
   border: 1px solid var(--color-border-primary);
-  border-radius: 16px;
+  border-radius: 12px;
 }
 
-/* ━━━ Gradient Text ━━━ */
+/* ━━━ Solid Text ━━━ */
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-gradient-to));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-text-primary);
+  font-weight: 800;
+  letter-spacing: -0.025em;
 }
 
 /* ━━━ Premium Button ━━━ */
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-gradient-to));
-  color: white;
+  background: var(--color-text-primary);
+  color: #000000;
   border: none;
-  border-radius: 12px;
+  border-radius: 9999px;
   padding: 10px 20px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 0 20px var(--color-accent-glow);
 }
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 30px var(--color-accent-glow);
+  background: #d7dbdc;
 }
 .btn-primary:active {
-  transform: translateY(0);
+  background: #c3c7c8;
 }
 
 .btn-ghost {
@@ -230,8 +225,8 @@ body {
 /* ━━━ Animations ━━━ */
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 10px var(--color-accent-glow); }
-  50% { box-shadow: 0 0 25px var(--color-accent-glow); }
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
 }
 
 @keyframes typing-dots {
@@ -275,8 +270,7 @@ body {
   width: 100%;
 }
 .input-field:focus {
-  border-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 3px var(--color-accent-glow);
+  border-color: var(--color-text-primary);
 }
 .input-field::placeholder {
   color: var(--color-text-muted);
