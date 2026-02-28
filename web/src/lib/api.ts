@@ -146,6 +146,7 @@ export function streamChat(
 
             const decoder = new TextDecoder();
             let buffer = '';
+            let doneHandled = false;
 
             while (true) {
                 const { done, value } = await reader.read();
@@ -159,9 +160,11 @@ export function streamChat(
                     if (line.startsWith('data: ')) {
                         try {
                             const chunk: ChatStreamChunk = JSON.parse(line.slice(6));
+                            if (chunk.done && doneHandled) continue;
                             onChunk(chunk);
 
                             if (chunk.done) {
+                                doneHandled = true;
                                 onDone();
                             }
                         } catch {
@@ -170,15 +173,21 @@ export function streamChat(
                 }
             }
 
-            if (buffer.startsWith('data: ')) {
+            if (buffer.startsWith('data: ') && !doneHandled) {
                 try {
                     const chunk: ChatStreamChunk = JSON.parse(buffer.slice(6));
                     onChunk(chunk);
+                    if (chunk.done) {
+                        doneHandled = true;
+                        onDone();
+                    }
                 } catch {
                 }
             }
 
-            onDone();
+            if (!doneHandled) {
+                onDone();
+            }
         })
         .catch((err) => {
             if (err.name !== 'AbortError') {

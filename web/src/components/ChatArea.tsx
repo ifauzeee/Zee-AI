@@ -49,12 +49,12 @@ export default function ChatArea() {
     const sidebarOpen = useStore((s) => s.sidebarOpen);
 
     useEffect(() => {
-        if (activeConversationId) {
+        if (activeConversationId && !isStreaming) {
             loadConversation(activeConversationId);
-        } else {
+        } else if (!activeConversationId) {
             setMessages([]);
         }
-    }, [activeConversationId]);
+    }, [activeConversationId, isStreaming]);
 
     useEffect(() => {
         scrollToBottom();
@@ -217,9 +217,9 @@ export default function ChatArea() {
                                 transition={{ type: 'spring', damping: 15 }}
                             >
                                 <div
-                                    className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-[var(--color-text-primary)]"
+                                    className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-(--color-text-primary)"
                                 >
-                                    <Sparkles size={36} className="text-[var(--color-bg-primary)]" />
+                                    <Sparkles size={36} className="text-(--color-bg-primary)" />
                                 </div>
                             </motion.div>
 
@@ -235,7 +235,7 @@ export default function ChatArea() {
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.2 }}
-                                className="text-[var(--color-text-secondary)] mb-8"
+                                className="text-(--color-text-secondary) mb-8"
                             >
                                 Your self-hosted AI assistant. Fast, private, and powerful.
                             </motion.p>
@@ -245,14 +245,14 @@ export default function ChatArea() {
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.25 }}
-                                    className="max-w-xl mx-auto mb-8 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl p-4 text-left shadow-sm"
+                                    className="max-w-xl mx-auto mb-8 bg-(--color-bg-secondary) border border-border-primary rounded-xl p-4 text-left shadow-sm"
                                 >
                                     <div className="flex items-center gap-2 mb-3">
-                                        <Settings2 size={16} className="text-[var(--color-accent-primary)]" />
-                                        <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">System Prompt (Persona)</h3>
+                                        <Settings2 size={16} className="text-(--color-accent-primary)" />
+                                        <h3 className="text-sm font-semibold text-(--color-text-primary)">System Prompt (Persona)</h3>
                                     </div>
                                     <select
-                                        className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-primary)] mb-3 outline-none focus:border-[var(--color-accent-primary)] transition-colors cursor-pointer"
+                                        className="w-full bg-(--color-bg-primary) border border-border-primary rounded-lg px-3 py-2 text-sm text-(--color-text-primary) mb-3 outline-none focus:border-(--color-accent-primary) transition-colors cursor-pointer"
                                         onChange={(e) => setSystemPrompt(e.target.value)}
                                         value={systemPrompt}
                                     >
@@ -263,7 +263,7 @@ export default function ChatArea() {
                                         <option value="You are a patient and creative teacher. Explain concepts as if I am a 5-year-old, using simple analogies and avoiding jargon.">Explain like I'm 5 (ELI5)</option>
                                     </select>
                                     <textarea
-                                        className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded-lg px-3 py-2 text-xs text-[var(--color-text-secondary)] resize-none outline-none focus:border-[var(--color-accent-primary)] transition-colors placeholder:text-[var(--color-text-muted)]"
+                                        className="w-full bg-(--color-bg-primary) border border-border-primary rounded-lg px-3 py-2 text-xs text-(--color-text-secondary) resize-none outline-none focus:border-(--color-accent-primary) transition-colors placeholder:text-text-muted"
                                         rows={2}
                                         placeholder="Or type a custom system prompt here..."
                                         value={systemPrompt}
@@ -286,15 +286,15 @@ export default function ChatArea() {
                                                 setInput(`${s.text} ${s.desc}`);
                                                 inputRef.current?.focus();
                                             }}
-                                            className="glass-card p-4 text-left hover:bg-[var(--color-bg-hover)] transition-all group cursor-pointer"
+                                            className="glass-card p-4 text-left hover:bg-(--color-bg-hover) transition-all group cursor-pointer"
                                         >
-                                            <div className="flex items-center gap-2 mb-1.5 text-[var(--color-accent-secondary)]">
+                                            <div className="flex items-center gap-2 mb-1.5 text-(--color-accent-secondary)">
                                                 {s.icon}
                                             </div>
-                                            <div className="text-sm font-medium text-[var(--color-text-primary)]">
+                                            <div className="text-sm font-medium text-(--color-text-primary)">
                                                 {s.text}
                                             </div>
-                                            <div className="text-xs text-[var(--color-text-muted)]">
+                                            <div className="text-xs text-text-muted">
                                                 {s.desc}
                                             </div>
                                         </button>
@@ -307,14 +307,14 @@ export default function ChatArea() {
                                     transition={{ delay: 0.3 }}
                                     className="glass-card p-6 max-w-md mx-auto"
                                 >
-                                    <Cpu size={24} className="mx-auto mb-3 text-[var(--color-warning)]" />
-                                    <p className="text-sm font-medium text-[var(--color-text-primary)] mb-2">
+                                    <Cpu size={24} className="mx-auto mb-3 text-warning" />
+                                    <p className="text-sm font-medium text-(--color-text-primary) mb-2">
                                         No AI model selected
                                     </p>
-                                    <p className="text-xs text-[var(--color-text-muted)] mb-3">
+                                    <p className="text-xs text-text-muted mb-3">
                                         Make sure Ollama is running and you have at least one model installed.
                                     </p>
-                                    <code className="text-xs text-[var(--color-accent-secondary)] bg-[var(--color-bg-primary)] px-3 py-1.5 rounded-lg">
+                                    <code className="text-xs text-(--color-accent-secondary) bg-(--color-bg-primary) px-3 py-1.5 rounded-lg">
                                         ollama pull gemma3
                                     </code>
                                 </motion.div>
@@ -356,7 +356,7 @@ export default function ChatArea() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
                         onClick={scrollToBottom}
-                        className="fixed bottom-28 left-1/2 -translate-x-1/2 p-2 rounded-full glass hover:bg-[var(--color-bg-hover)] transition-colors z-10"
+                        className="fixed bottom-28 left-1/2 -translate-x-1/2 p-2 rounded-full glass hover:bg-(--color-bg-hover) transition-colors z-10"
                         style={{ marginLeft: sidebarOpen ? '144px' : '0' }}
                     >
                         <ArrowDown size={18} />
@@ -392,14 +392,14 @@ export default function ChatArea() {
                             }
                             disabled={!selectedModel}
                             rows={1}
-                            className="flex-1 bg-transparent border-none outline-none resize-none text-sm px-3 py-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] disabled:opacity-50"
+                            className="flex-1 bg-transparent border-none outline-none resize-none text-sm px-3 py-3 text-(--color-text-primary) placeholder:text-text-muted disabled:opacity-50"
                             style={{ minHeight: '48px', maxHeight: '200px' }}
                         />
 
                         {isStreaming ? (
                             <button
                                 onClick={handleStop}
-                                className="shrink-0 p-2.5 rounded-xl bg-[var(--color-error)] bg-opacity-20 text-[var(--color-error)] hover:bg-opacity-30 transition-colors"
+                                className="shrink-0 p-2.5 rounded-xl bg-error bg-opacity-20 text-error hover:bg-opacity-30 transition-colors"
                             >
                                 <StopCircle size={20} />
                             </button>
@@ -415,12 +415,12 @@ export default function ChatArea() {
                                             : 'var(--color-bg-hover)',
                                 }}
                             >
-                                <Send size={20} className={input.trim() && selectedModel ? "text-[var(--color-bg-primary)]" : "text-[var(--color-text-muted)]"} />
+                                <Send size={20} className={input.trim() && selectedModel ? "text-(--color-bg-primary)" : "text-text-muted"} />
                             </button>
                         )}
                     </div>
 
-                    <p className="text-center text-xs text-[var(--color-text-muted)] mt-2">
+                    <p className="text-center text-xs text-text-muted mt-2">
                         Zee-AI runs locally on your machine. Your data never leaves your device.
                     </p>
                 </div>
